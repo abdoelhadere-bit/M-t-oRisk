@@ -1,0 +1,7 @@
+﻿venv/
+__pycache__/
+*.pyc
+.env
+bronze/*.json
+silver/*.parquet
+gold/*.parquet
