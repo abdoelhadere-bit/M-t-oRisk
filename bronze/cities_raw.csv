@@ -1,0 +1,45 @@
+city_ascii,lat,lng,country,admin_name,population,id
+Casablanca,33.5992,-7.62,Morocco,Casablanca-Settat,3950000.0,1504175315
+Tangier,35.7767,-5.8039,Morocco,Tanger-Tétouan-Al Hoceïma,1275428.0,1504861504
+Fes,34.0433,-5.0033,Morocco,Fès-Meknès,1167842.0,1504861997
+Marrakech,31.6295,-7.9811,Morocco,Marrakech-Safi,1085330.0,1504172585
+Sale,34.05,-6.8167,Morocco,Rabat-Salé-Kénitra,945101.0,1504989034
+Meknes,33.8833,-5.55,Morocco,Fès-Meknès,601000.0,1504333193
+Rabat,34.0211,-6.8414,Morocco,Rabat-Salé-Kénitra,572717.0,1504023252
+Agadir,30.4214,-9.5831,Morocco,Souss-Massa,538000.0,1504116858
+Kenitra,34.25,-6.5833,Morocco,Rabat-Salé-Kénitra,507736.0,1504534876
+Oujda-Angad,34.6867,-1.9114,Morocco,Oriental,506224.0,1504891036
+Tetouan,35.5667,-5.3667,Morocco,Tanger-Tétouan-Al Hoceïma,422757.0,1504709141
+Safi,32.2833,-9.2333,Morocco,Marrakech-Safi,367249.0,1504000717
+Taourirt,34.41,-2.89,Morocco,Oriental,321876.0,1504648957
+Temara,33.9234,-6.9076,Morocco,Rabat-Salé-Kénitra,297098.0,1504016606
+Laayoune,27.15,-13.2,Morocco,Laâyoune-Sakia El Hamra,262791.0,1504000319
+El Jadid,33.2566,-8.5025,Morocco,Casablanca-Settat,237464.0,1504964063
+Ait Melloul,30.3342,-9.4972,Morocco,Souss-Massa,210870.0,1504134516
+Beni Mellal,32.3394,-6.3608,Morocco,Béni Mellal-Khénifra,209594.0,1504131639
+Bouskoura,33.4489,-7.6486,Morocco,Casablanca-Settat,200359.0,1504503306
+Tiznit,29.7,-9.7269,Morocco,Souss-Massa,196348.0,1504399838
+Mohammedia,33.6833,-7.3833,Morocco,Casablanca-Settat,194358.0,1504542634
+Kouribga,32.88,-6.9,Morocco,Béni Mellal-Khénifra,191807.0,1504325928
+Settat,33.0023,-7.6198,Morocco,Casablanca-Settat,171556.0,1504720478
+Barrechid,33.27,-7.5872,Morocco,Casablanca-Settat,168687.0,1504194885
+Ad Dakhla,23.7167,-15.95,Morocco,Dakhla-Oued Ed-Dahab,165463.0,1504999983
+Nador,35.1667,-2.9333,Morocco,Oriental,161726.0,1504811178
+Taza,34.2144,-4.0088,Morocco,Fès-Meknès,148406.0,1504405154
+Inezgane,30.3658,-9.5381,Morocco,Souss-Massa,137512.0,1504786674
+Larache,35.1833,-6.15,Morocco,Tanger-Tétouan-Al Hoceïma,133731.0,1504637172
+Al Khmissat,33.81,-6.06,Morocco,Rabat-Salé-Kénitra,131542.0,1504079907
+Guelmim,28.9833,-10.0667,Morocco,Guelmim-Oued Noun,126729.0,1504110861
+Ksar El Kebir,35.0,-5.9,Morocco,Tanger-Tétouan-Al Hoceïma,124701.0,1504230428
+Khenifra,32.93,-5.66,Morocco,Béni Mellal-Khénifra,123738.0,1504143530
+Skhirate,33.85,-7.03,Morocco,Rabat-Salé-Kénitra,122705.0,1504664899
+Beni Yakhlef,33.6555,-7.3221,Morocco,Casablanca-Settat,117653.0,1504512130
+Sidi Yahya Zaer,33.7105,-6.8831,Morocco,Rabat-Salé-Kénitra,116649.0,1504365068
+Ben Guerir,32.23,-7.95,Morocco,Marrakech-Safi,114872.0,1504909564
+Ait Ali,30.1739,-9.4881,Morocco,Souss-Massa,113236.0,1504009062
+My Drarga,30.3805,-9.4763,Morocco,Souss-Massa,107621.0,1504399163
+Lqoliaa,30.2942,-9.4544,Morocco,Souss-Massa,107133.0,1504675410
+El Kelaa des Srarhna,32.05,-7.4,Morocco,Marrakech-Safi,106418.0,1504846488
+Moulay Abdallah,33.1978,-8.5883,Morocco,Casablanca-Settat,103993.0,1504563452
+Tiflet,33.9,-6.33,Morocco,Rabat-Salé-Kénitra,103850.0,1504661999
+Oulad Teima,30.4,-9.21,Morocco,Souss-Massa,100284.0,1504278611
