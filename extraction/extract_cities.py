@@ -1,7 +1,7 @@
 import pandas as pd
 from pathlib import Path
 
-POPULATION_THRESHOLD = 100000
+POPULATION_THRESHOLD = 80000
 
 def load_moroccan_cities(csv_path: str) -> pd.DataFrame:
 
