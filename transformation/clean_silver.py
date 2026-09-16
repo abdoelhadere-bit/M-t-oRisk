@@ -60,6 +60,7 @@ def join_with_cities(weather_df:pd.DataFrame, path_file: str)-> pd.DataFrame:
     missing = merged[merged['city_ascii'].isna()]
     if not missing.empty:
         logger.warning(f"{len(missing)} lignes n'ont pas de villes")
+    merged = merged.drop(columns=['id'])
 
     return merged
     

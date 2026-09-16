@@ -10,19 +10,19 @@ logger = logging.getLogger(__name__)
 def categorize_temp(temp_max):
     #later: handle temp < 10
     if temp_max >= 45:
-        return "Extrême chaleur"
+        return "Extreme"
     elif temp_max >= 33:
         return "Chaude"
     elif temp_max >= 20:
-        return "Modérée"
+        return "Moderee"
     else:
-        return "Fraîche"
+        return "Fraiche"
 
 def categorize_precipitation(prec_mm):
     if prec_mm >= 35:
         return "Forte"
     elif prec_mm >= 15:
-        return "Modérée"
+        return "Moderee"
     elif prec_mm > 0:
         return "Faible"
     else:
@@ -38,7 +38,7 @@ def categorize_wind(gusts_kmh):
 
 def categorize_weather_code(code: int) -> str:
     if code == 0:
-        return "Ciel dégagé"
+        return "Ciel degage"
     elif code in [1, 2, 3]:
         return "Nuageux"
     elif code in [45, 48]:
@@ -109,18 +109,18 @@ def risk_level(score: float) -> str:
     else:
         return "Critique"
 
-def add_features(df: pd.DataFrame)-> pd.DataFrame:
+def add_features(df: pd.DataFrame) -> pd.DataFrame:
     df['temperature_category'] = df['temperature_2m_max'].apply(categorize_temp)
     df['precipitation_category'] = df['precipitation_sum'].apply(categorize_precipitation)
     df['wind_category'] = df['wind_gusts_10m_max'].apply(categorize_wind)
     df['weather_category'] = df['weather_code'].apply(categorize_weather_code)
 
-    df['dayOfWeek'] = df['date'].dt.day_name()
-    df['isWeekend'] = df['date'].dt.dayofweek.isin([5, 6])
-    df['daysAhead'] = (df['date'] - pd.Timestamp.today().normalize()).dt.days
+    df['day_of_week'] = df['date'].dt.day_name()
+    df['is_weekend'] = df['date'].dt.dayofweek.isin([5, 6])
+    df['days_ahead'] = (df['date'] - pd.Timestamp.today().normalize()).dt.days
 
     before = len(df)
-    df = df[df['daysAhead'] >= 0]
+    df = df[df['days_ahead'] >= 0]
     removed = before - len(df)
     if removed > 0:
         logger.warning(f"{removed} lignes avec une date passée (days_ahead < 0) supprimées")
@@ -130,16 +130,25 @@ def add_features(df: pd.DataFrame)-> pd.DataFrame:
 
     return df
 
+
+GOLD_COLUMNS = [
+    "city_id", "date",
+    "temperature_2m_max", "temperature_2m_min",
+    "precipitation_sum", "precipitation_probability_max",
+    "wind_speed_10m_max", "wind_gusts_10m_max", "weather_code",
+    "temperature_category", "precipitation_category",
+    "wind_category", "weather_category",
+    "risk_score", "risk_level",
+    "day_of_week", "is_weekend", "days_ahead",
+]
 if __name__ == "__main__":
     df = pd.read_csv("silver/weather_silver.csv", parse_dates=['date'])
     df = add_features(df)
 
-    print(df[["risk_score", "risk_level",'date',"dayOfWeek", "isWeekend", "daysAhead", "temperature_2m_max", "temperature_category", "wind_gusts_10m_max", "wind_category", "weather_code", "weather_category"]].head(10))
-    print(df['risk_level'].value_counts())
+    df_gold = df[GOLD_COLUMNS]
 
-    print(df[df['risk_level'] == 'Critique'][['city_ascii', 'date', 'temperature_2m_max', 'precipitation_sum', 'wind_gusts_10m_max', 'weather_code', 'risk_score']])
-    print("-------------------")
-    print(df[df['risk_level'] == 'Élevé'][['city_ascii', 'date', 'temperature_2m_max', 'precipitation_sum', 'wind_gusts_10m_max', 'weather_code', 'risk_score']])   
-    print(df[['temperature_2m_max', 'precipitation_sum', 'wind_gusts_10m_max']].max())
-    row_max_wind = df[df['wind_gusts_10m_max'] == df['wind_gusts_10m_max'].max()]
-    print(row_max_wind[['city_ascii', 'date', 'temperature_2m_max', 'precipitation_sum', 'wind_gusts_10m_max', 'weather_code', 'risk_score', 'risk_level']])
+    df_gold.to_csv("gold/weather_gold.csv", index=False)
+
+    logger.info(f"Gold terminé : {len(df_gold)} lignes sauvegardées dans gold/weather_gold.csv")
+    print(df_gold['risk_level'].value_counts())
+    print(pd.read_csv("gold/weather_gold.csv").columns.tolist())
