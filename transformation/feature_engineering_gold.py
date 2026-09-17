@@ -103,9 +103,9 @@ def risk_level(score: float) -> str:
     if score <= 25:
         return "Faible"
     elif score <= 50:
-        return "Modéré"
+        return "Modere"
     elif score <= 75:
-        return "Élevé"
+        return "Eleve"
     else:
         return "Critique"
 
