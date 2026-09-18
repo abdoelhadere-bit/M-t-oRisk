@@ -1,0 +1,41 @@
+[2026-09-18T08:45:11.730+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2026-09-18T08:45:11.785+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: meteorisk_pipeline.feature_engineering_gold scheduled__2026-09-17T00:00:00+00:00 [queued]>
+[2026-09-18T08:45:11.800+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: meteorisk_pipeline.feature_engineering_gold scheduled__2026-09-17T00:00:00+00:00 [queued]>
+[2026-09-18T08:45:11.803+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 3
+[2026-09-18T08:45:11.825+0000] {taskinstance.py:2330} INFO - Executing <Task(BashOperator): feature_engineering_gold> on 2026-09-17 00:00:00+00:00
+[2026-09-18T08:45:11.836+0000] {standard_task_runner.py:90} INFO - Running: ['airflow', 'tasks', 'run', 'meteorisk_pipeline', 'feature_engineering_gold', 'scheduled__2026-09-17T00:00:00+00:00', '--job-id', '23', '--raw', '--subdir', 'DAGS_FOLDER/meteorisk_dag.py', '--cfg-path', '/tmp/tmpi6kfjd9w']
+[2026-09-18T08:45:11.840+0000] {logging_mixin.py:188} WARNING - /home/airflow/.local/lib/python3.12/site-packages/airflow/task/task_runner/standard_task_runner.py:62 DeprecationWarning: This process (pid=291) is multi-threaded, use of fork() may lead to deadlocks in the child.
+[2026-09-18T08:45:11.840+0000] {standard_task_runner.py:91} INFO - Job 23: Subtask feature_engineering_gold
+[2026-09-18T08:45:11.842+0000] {standard_task_runner.py:64} INFO - Started process 292 to run task
+[2026-09-18T08:45:11.910+0000] {task_command.py:426} INFO - Running <TaskInstance: meteorisk_pipeline.feature_engineering_gold scheduled__2026-09-17T00:00:00+00:00 [running]> on host 642d0aadbf4e
+[2026-09-18T08:45:12.050+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='Abderrahmane' AIRFLOW_CTX_DAG_ID='meteorisk_pipeline' AIRFLOW_CTX_TASK_ID='feature_engineering_gold' AIRFLOW_CTX_EXECUTION_DATE='2026-09-17T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2026-09-17T00:00:00+00:00'
+[2026-09-18T08:45:12.052+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2026-09-18T08:45:12.077+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2026-09-18T08:45:12.079+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', 'cd /opt/airflow && python transformation/feature_engineering_gold.py']
+[2026-09-18T08:45:12.092+0000] {subprocess.py:86} INFO - Output:
+[2026-09-18T08:45:13.264+0000] {subprocess.py:93} INFO - 2026-09-18 08:45:13,264 [WARNING] 227 lignes avec une date passée (days_ahead < 0) supprimées
+[2026-09-18T08:45:13.276+0000] {subprocess.py:93} INFO - /opt/airflow/transformation/feature_engineering_gold.py:128: SettingWithCopyWarning:
+[2026-09-18T08:45:13.277+0000] {subprocess.py:93} INFO - A value is trying to be set on a copy of a slice from a DataFrame.
+[2026-09-18T08:45:13.277+0000] {subprocess.py:93} INFO - Try using .loc[row_indexer,col_indexer] = value instead
+[2026-09-18T08:45:13.278+0000] {subprocess.py:93} INFO - 
+[2026-09-18T08:45:13.279+0000] {subprocess.py:93} INFO - See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+[2026-09-18T08:45:13.280+0000] {subprocess.py:93} INFO -   df['risk_score'] = df.apply(calculate_risk_score, axis=1)
+[2026-09-18T08:45:13.281+0000] {subprocess.py:93} INFO - /opt/airflow/transformation/feature_engineering_gold.py:129: SettingWithCopyWarning:
+[2026-09-18T08:45:13.282+0000] {subprocess.py:93} INFO - A value is trying to be set on a copy of a slice from a DataFrame.
+[2026-09-18T08:45:13.282+0000] {subprocess.py:93} INFO - Try using .loc[row_indexer,col_indexer] = value instead
+[2026-09-18T08:45:13.283+0000] {subprocess.py:93} INFO - 
+[2026-09-18T08:45:13.284+0000] {subprocess.py:93} INFO - See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+[2026-09-18T08:45:13.284+0000] {subprocess.py:93} INFO -   df['risk_level'] = df['risk_score'].apply(risk_level)
+[2026-09-18T08:45:13.292+0000] {subprocess.py:93} INFO - 2026-09-18 08:45:13,292 [INFO] Gold terminé : 427 lignes sauvegardées dans gold/weather_gold.csv
+[2026-09-18T08:45:13.302+0000] {subprocess.py:93} INFO - risk_level
+[2026-09-18T08:45:13.303+0000] {subprocess.py:93} INFO - Faible    266
+[2026-09-18T08:45:13.304+0000] {subprocess.py:93} INFO - Modere    150
+[2026-09-18T08:45:13.305+0000] {subprocess.py:93} INFO - Eleve      11
+[2026-09-18T08:45:13.305+0000] {subprocess.py:93} INFO - Name: count, dtype: int64
+[2026-09-18T08:45:13.306+0000] {subprocess.py:93} INFO - ['city_id', 'date', 'temperature_2m_max', 'temperature_2m_min', 'precipitation_sum', 'precipitation_probability_max', 'wind_speed_10m_max', 'wind_gusts_10m_max', 'weather_code', 'temperature_category', 'precipitation_category', 'wind_category', 'weather_category', 'risk_score', 'risk_level', 'day_of_week', 'is_weekend', 'days_ahead']
+[2026-09-18T08:45:13.384+0000] {subprocess.py:97} INFO - Command exited with return code 0
+[2026-09-18T08:45:13.386+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2026-09-18T08:45:13.419+0000] {taskinstance.py:1206} INFO - Marking task as SUCCESS. dag_id=meteorisk_pipeline, task_id=feature_engineering_gold, run_id=scheduled__2026-09-17T00:00:00+00:00, execution_date=20260917T000000, start_date=20260918T084511, end_date=20260918T084513
+[2026-09-18T08:45:13.469+0000] {local_task_job_runner.py:243} INFO - Task exited with return code 0
+[2026-09-18T08:45:13.491+0000] {taskinstance.py:3503} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2026-09-18T08:45:13.494+0000] {local_task_job_runner.py:222} INFO - ::endgroup::

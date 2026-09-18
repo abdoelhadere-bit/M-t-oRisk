@@ -1,0 +1,82 @@
+[2026-09-18T10:27:20.389+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2026-09-18T10:27:20.437+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: meteorisk_pipeline.extract_weather manual__2026-09-18T10:27:13.277721+00:00 [queued]>
+[2026-09-18T10:27:20.450+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: meteorisk_pipeline.extract_weather manual__2026-09-18T10:27:13.277721+00:00 [queued]>
+[2026-09-18T10:27:20.452+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 3
+[2026-09-18T10:27:20.471+0000] {taskinstance.py:2330} INFO - Executing <Task(BashOperator): extract_weather> on 2026-09-18 10:27:13.277721+00:00
+[2026-09-18T10:27:20.495+0000] {logging_mixin.py:188} WARNING - /home/airflow/.local/lib/python3.12/site-packages/airflow/task/task_runner/standard_task_runner.py:62 DeprecationWarning: This process (pid=1400) is multi-threaded, use of fork() may lead to deadlocks in the child.
+[2026-09-18T10:27:20.493+0000] {standard_task_runner.py:90} INFO - Running: ['airflow', 'tasks', 'run', 'meteorisk_pipeline', 'extract_weather', 'manual__2026-09-18T10:27:13.277721+00:00', '--job-id', '27', '--raw', '--subdir', 'DAGS_FOLDER/meteorisk_dag.py', '--cfg-path', '/tmp/tmpwcv03c0j']
+[2026-09-18T10:27:20.498+0000] {standard_task_runner.py:64} INFO - Started process 1401 to run task
+[2026-09-18T10:27:20.498+0000] {standard_task_runner.py:91} INFO - Job 27: Subtask extract_weather
+[2026-09-18T10:27:20.571+0000] {task_command.py:426} INFO - Running <TaskInstance: meteorisk_pipeline.extract_weather manual__2026-09-18T10:27:13.277721+00:00 [running]> on host 642d0aadbf4e
+[2026-09-18T10:27:20.696+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='Abderrahmane' AIRFLOW_CTX_DAG_ID='meteorisk_pipeline' AIRFLOW_CTX_TASK_ID='extract_weather' AIRFLOW_CTX_EXECUTION_DATE='2026-09-18T10:27:13.277721+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2026-09-18T10:27:13.277721+00:00'
+[2026-09-18T10:27:20.698+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2026-09-18T10:27:20.717+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2026-09-18T10:27:20.721+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', 'cd /opt/airflow && python extraction/extract_weather.py']
+[2026-09-18T10:27:20.733+0000] {subprocess.py:86} INFO - Output:
+[2026-09-18T10:28:30.028+0000] {subprocess.py:93} INFO - bronze/weather_1504175315_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.031+0000] {subprocess.py:93} INFO - bronze/weather_1504861504_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.033+0000] {subprocess.py:93} INFO - bronze/weather_1504861997_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.035+0000] {subprocess.py:93} INFO - bronze/weather_1504172585_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.036+0000] {subprocess.py:93} INFO - bronze/weather_1504989034_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.037+0000] {subprocess.py:93} INFO - bronze/weather_1504333193_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.039+0000] {subprocess.py:93} INFO - bronze/weather_1504023252_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.040+0000] {subprocess.py:93} INFO - bronze/weather_1504116858_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.041+0000] {subprocess.py:93} INFO - bronze/weather_1504534876_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.044+0000] {subprocess.py:93} INFO - bronze/weather_1504891036_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.045+0000] {subprocess.py:93} INFO - bronze/weather_1504709141_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.047+0000] {subprocess.py:93} INFO - bronze/weather_1504000717_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.049+0000] {subprocess.py:93} INFO - bronze/weather_1504648957_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.050+0000] {subprocess.py:93} INFO - bronze/weather_1504016606_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.052+0000] {subprocess.py:93} INFO - bronze/weather_1504000319_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.053+0000] {subprocess.py:93} INFO - bronze/weather_1504964063_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.054+0000] {subprocess.py:93} INFO - bronze/weather_1504134516_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.055+0000] {subprocess.py:93} INFO - bronze/weather_1504131639_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.057+0000] {subprocess.py:93} INFO - bronze/weather_1504503306_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.058+0000] {subprocess.py:93} INFO - bronze/weather_1504399838_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.060+0000] {subprocess.py:93} INFO - bronze/weather_1504542634_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.061+0000] {subprocess.py:93} INFO - bronze/weather_1504325928_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.064+0000] {subprocess.py:93} INFO - bronze/weather_1504720478_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.067+0000] {subprocess.py:93} INFO - bronze/weather_1504194885_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.070+0000] {subprocess.py:93} INFO - bronze/weather_1504999983_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.071+0000] {subprocess.py:93} INFO - bronze/weather_1504811178_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.073+0000] {subprocess.py:93} INFO - bronze/weather_1504405154_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.075+0000] {subprocess.py:93} INFO - bronze/weather_1504786674_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.076+0000] {subprocess.py:93} INFO - bronze/weather_1504637172_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.079+0000] {subprocess.py:93} INFO - bronze/weather_1504079907_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.081+0000] {subprocess.py:93} INFO - bronze/weather_1504110861_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.083+0000] {subprocess.py:93} INFO - bronze/weather_1504230428_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.085+0000] {subprocess.py:93} INFO - bronze/weather_1504143530_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.087+0000] {subprocess.py:93} INFO - bronze/weather_1504664899_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.088+0000] {subprocess.py:93} INFO - bronze/weather_1504512130_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.090+0000] {subprocess.py:93} INFO - bronze/weather_1504365068_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.092+0000] {subprocess.py:93} INFO - bronze/weather_1504909564_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.094+0000] {subprocess.py:93} INFO - bronze/weather_1504009062_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.096+0000] {subprocess.py:93} INFO - bronze/weather_1504399163_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.098+0000] {subprocess.py:93} INFO - bronze/weather_1504675410_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.101+0000] {subprocess.py:93} INFO - bronze/weather_1504846488_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.102+0000] {subprocess.py:93} INFO - bronze/weather_1504563452_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.104+0000] {subprocess.py:93} INFO - bronze/weather_1504661999_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.107+0000] {subprocess.py:93} INFO - bronze/weather_1504278611_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.108+0000] {subprocess.py:93} INFO - bronze/weather_1504282363_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.109+0000] {subprocess.py:93} INFO - bronze/weather_1504400263_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.110+0000] {subprocess.py:93} INFO - bronze/weather_1504005759_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.112+0000] {subprocess.py:93} INFO - bronze/weather_1504975687_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.114+0000] {subprocess.py:93} INFO - bronze/weather_1504000451_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.115+0000] {subprocess.py:93} INFO - bronze/weather_1504341023_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.117+0000] {subprocess.py:93} INFO - bronze/weather_1504101128_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.118+0000] {subprocess.py:93} INFO - bronze/weather_1504098746_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.119+0000] {subprocess.py:93} INFO - bronze/weather_1504926324_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.120+0000] {subprocess.py:93} INFO - bronze/weather_1504020762_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.121+0000] {subprocess.py:93} INFO - bronze/weather_1504255211_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.122+0000] {subprocess.py:93} INFO - bronze/weather_1504820285_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.123+0000] {subprocess.py:93} INFO - bronze/weather_1504989758_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.124+0000] {subprocess.py:93} INFO - bronze/weather_1504415764_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.125+0000] {subprocess.py:93} INFO - bronze/weather_1504845522_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.126+0000] {subprocess.py:93} INFO - bronze/weather_1504585311_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.127+0000] {subprocess.py:93} INFO - bronze/weather_1504842310_2026-09-18.json -> Saved
+[2026-09-18T10:28:30.177+0000] {subprocess.py:97} INFO - Command exited with return code 0
+[2026-09-18T10:28:30.180+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2026-09-18T10:28:30.226+0000] {taskinstance.py:1206} INFO - Marking task as SUCCESS. dag_id=meteorisk_pipeline, task_id=extract_weather, run_id=manual__2026-09-18T10:27:13.277721+00:00, execution_date=20260918T102713, start_date=20260918T102720, end_date=20260918T102830
+[2026-09-18T10:28:30.286+0000] {local_task_job_runner.py:243} INFO - Task exited with return code 0
+[2026-09-18T10:28:30.322+0000] {taskinstance.py:3503} INFO - 1 downstream tasks scheduled from follow-on schedule check
+[2026-09-18T10:28:30.329+0000] {local_task_job_runner.py:222} INFO - ::endgroup::

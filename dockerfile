@@ -1,16 +1,12 @@
-FROM apache/airflow:2.8.1-python3.10
+FROM python:3.11-slim
 
-USER root
+WORKDIR /app
 
-System packages needed for network utilities and Postgres build tools
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    libpq-dev \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-USER airflow
+COPY dashboard/ ./dashboard
 
-COPY requirements.txt /requirements.txt
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r /requirements.txt
+EXPOSE 8501
+
+CMD ["streamlit", "run", "dashboard/app.py", "--server.address=0.0.0.0"]

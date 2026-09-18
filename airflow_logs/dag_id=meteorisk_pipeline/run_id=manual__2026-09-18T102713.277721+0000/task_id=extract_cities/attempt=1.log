@@ -1,0 +1,32 @@
+[2026-09-18T10:27:15.517+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2026-09-18T10:27:15.711+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: meteorisk_pipeline.extract_cities manual__2026-09-18T10:27:13.277721+00:00 [queued]>
+[2026-09-18T10:27:15.747+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: meteorisk_pipeline.extract_cities manual__2026-09-18T10:27:13.277721+00:00 [queued]>
+[2026-09-18T10:27:15.750+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 3
+[2026-09-18T10:27:15.792+0000] {taskinstance.py:2330} INFO - Executing <Task(BashOperator): extract_cities> on 2026-09-18 10:27:13.277721+00:00
+[2026-09-18T10:27:15.815+0000] {logging_mixin.py:188} WARNING - /home/airflow/.local/lib/python3.12/site-packages/airflow/task/task_runner/standard_task_runner.py:62 DeprecationWarning: This process (pid=1370) is multi-threaded, use of fork() may lead to deadlocks in the child.
+[2026-09-18T10:27:15.812+0000] {standard_task_runner.py:90} INFO - Running: ['airflow', 'tasks', 'run', 'meteorisk_pipeline', 'extract_cities', 'manual__2026-09-18T10:27:13.277721+00:00', '--job-id', '25', '--raw', '--subdir', 'DAGS_FOLDER/meteorisk_dag.py', '--cfg-path', '/tmp/tmpiqs3_h2y']
+[2026-09-18T10:27:15.817+0000] {standard_task_runner.py:64} INFO - Started process 1371 to run task
+[2026-09-18T10:27:15.817+0000] {standard_task_runner.py:91} INFO - Job 25: Subtask extract_cities
+[2026-09-18T10:27:15.910+0000] {task_command.py:426} INFO - Running <TaskInstance: meteorisk_pipeline.extract_cities manual__2026-09-18T10:27:13.277721+00:00 [running]> on host 642d0aadbf4e
+[2026-09-18T10:27:16.125+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='Abderrahmane' AIRFLOW_CTX_DAG_ID='meteorisk_pipeline' AIRFLOW_CTX_TASK_ID='extract_cities' AIRFLOW_CTX_EXECUTION_DATE='2026-09-18T10:27:13.277721+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2026-09-18T10:27:13.277721+00:00'
+[2026-09-18T10:27:16.126+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2026-09-18T10:27:16.182+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2026-09-18T10:27:16.190+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', 'cd /opt/airflow && python extraction/extract_cities.py']
+[2026-09-18T10:27:16.215+0000] {subprocess.py:86} INFO - Output:
+[2026-09-18T10:27:18.746+0000] {subprocess.py:93} INFO - Index(['city_ascii', 'lat', 'lng', 'country', 'admin_name', 'population',
+[2026-09-18T10:27:18.747+0000] {subprocess.py:93} INFO -        'id'],
+[2026-09-18T10:27:18.748+0000] {subprocess.py:93} INFO -       dtype='object')
+[2026-09-18T10:27:18.749+0000] {subprocess.py:93} INFO -      city_ascii      lat  ...  population          id
+[2026-09-18T10:27:18.750+0000] {subprocess.py:93} INFO - 130  Casablanca  33.5992  ...   3950000.0  1504175315
+[2026-09-18T10:27:18.751+0000] {subprocess.py:93} INFO - 536     Tangier  35.7767  ...   1275428.0  1504861504
+[2026-09-18T10:27:18.752+0000] {subprocess.py:93} INFO - 601         Fes  34.0433  ...   1167842.0  1504861997
+[2026-09-18T10:27:18.754+0000] {subprocess.py:93} INFO - 643   Marrakech  31.6295  ...   1085330.0  1504172585
+[2026-09-18T10:27:18.755+0000] {subprocess.py:93} INFO - 766        Sale  34.0500  ...    945101.0  1504989034
+[2026-09-18T10:27:18.756+0000] {subprocess.py:93} INFO - 
+[2026-09-18T10:27:18.758+0000] {subprocess.py:93} INFO - [5 rows x 7 columns]
+[2026-09-18T10:27:18.904+0000] {subprocess.py:97} INFO - Command exited with return code 0
+[2026-09-18T10:27:18.908+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2026-09-18T10:27:18.966+0000] {taskinstance.py:1206} INFO - Marking task as SUCCESS. dag_id=meteorisk_pipeline, task_id=extract_cities, run_id=manual__2026-09-18T10:27:13.277721+00:00, execution_date=20260918T102713, start_date=20260918T102715, end_date=20260918T102718
+[2026-09-18T10:27:19.018+0000] {local_task_job_runner.py:243} INFO - Task exited with return code 0
+[2026-09-18T10:27:19.060+0000] {taskinstance.py:3503} INFO - 1 downstream tasks scheduled from follow-on schedule check
+[2026-09-18T10:27:19.063+0000] {local_task_job_runner.py:222} INFO - ::endgroup::

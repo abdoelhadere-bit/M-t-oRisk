@@ -1,0 +1,23 @@
+[2026-09-18T08:45:13.771+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2026-09-18T08:45:13.820+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: meteorisk_pipeline.load_postgres scheduled__2026-09-17T00:00:00+00:00 [queued]>
+[2026-09-18T08:45:13.834+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: meteorisk_pipeline.load_postgres scheduled__2026-09-17T00:00:00+00:00 [queued]>
+[2026-09-18T08:45:13.836+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 3
+[2026-09-18T08:45:13.853+0000] {taskinstance.py:2330} INFO - Executing <Task(BashOperator): load_postgres> on 2026-09-17 00:00:00+00:00
+[2026-09-18T08:45:13.862+0000] {standard_task_runner.py:90} INFO - Running: ['airflow', 'tasks', 'run', 'meteorisk_pipeline', 'load_postgres', 'scheduled__2026-09-17T00:00:00+00:00', '--job-id', '24', '--raw', '--subdir', 'DAGS_FOLDER/meteorisk_dag.py', '--cfg-path', '/tmp/tmp5dlgg52p']
+[2026-09-18T08:45:13.866+0000] {standard_task_runner.py:91} INFO - Job 24: Subtask load_postgres
+[2026-09-18T08:45:13.867+0000] {logging_mixin.py:188} WARNING - /home/airflow/.local/lib/python3.12/site-packages/airflow/task/task_runner/standard_task_runner.py:62 DeprecationWarning: This process (pid=306) is multi-threaded, use of fork() may lead to deadlocks in the child.
+[2026-09-18T08:45:13.868+0000] {standard_task_runner.py:64} INFO - Started process 307 to run task
+[2026-09-18T08:45:13.989+0000] {task_command.py:426} INFO - Running <TaskInstance: meteorisk_pipeline.load_postgres scheduled__2026-09-17T00:00:00+00:00 [running]> on host 642d0aadbf4e
+[2026-09-18T08:45:14.104+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='Abderrahmane' AIRFLOW_CTX_DAG_ID='meteorisk_pipeline' AIRFLOW_CTX_TASK_ID='load_postgres' AIRFLOW_CTX_EXECUTION_DATE='2026-09-17T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2026-09-17T00:00:00+00:00'
+[2026-09-18T08:45:14.106+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2026-09-18T08:45:14.126+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2026-09-18T08:45:14.127+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', 'cd /opt/airflow && python load/load_postgres.py']
+[2026-09-18T08:45:14.139+0000] {subprocess.py:86} INFO - Output:
+[2026-09-18T08:45:15.995+0000] {subprocess.py:93} INFO - 61 villes upsertées
+[2026-09-18T08:45:15.996+0000] {subprocess.py:93} INFO - 427 prévisions upsertées
+[2026-09-18T08:45:16.118+0000] {subprocess.py:97} INFO - Command exited with return code 0
+[2026-09-18T08:45:16.120+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2026-09-18T08:45:16.159+0000] {taskinstance.py:1206} INFO - Marking task as SUCCESS. dag_id=meteorisk_pipeline, task_id=load_postgres, run_id=scheduled__2026-09-17T00:00:00+00:00, execution_date=20260917T000000, start_date=20260918T084513, end_date=20260918T084516
+[2026-09-18T08:45:16.190+0000] {local_task_job_runner.py:243} INFO - Task exited with return code 0
+[2026-09-18T08:45:16.212+0000] {taskinstance.py:3503} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2026-09-18T08:45:16.216+0000] {local_task_job_runner.py:222} INFO - ::endgroup::

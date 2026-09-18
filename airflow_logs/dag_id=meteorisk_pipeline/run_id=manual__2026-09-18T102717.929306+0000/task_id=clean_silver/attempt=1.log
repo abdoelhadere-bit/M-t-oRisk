@@ -1,0 +1,23 @@
+[2026-09-18T10:28:32.056+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2026-09-18T10:28:32.097+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: meteorisk_pipeline.clean_silver manual__2026-09-18T10:27:17.929306+00:00 [queued]>
+[2026-09-18T10:28:32.109+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: meteorisk_pipeline.clean_silver manual__2026-09-18T10:27:17.929306+00:00 [queued]>
+[2026-09-18T10:28:32.110+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 3
+[2026-09-18T10:28:32.127+0000] {taskinstance.py:2330} INFO - Executing <Task(BashOperator): clean_silver> on 2026-09-18 10:27:17.929306+00:00
+[2026-09-18T10:28:32.136+0000] {standard_task_runner.py:90} INFO - Running: ['airflow', 'tasks', 'run', 'meteorisk_pipeline', 'clean_silver', 'manual__2026-09-18T10:27:17.929306+00:00', '--job-id', '30', '--raw', '--subdir', 'DAGS_FOLDER/meteorisk_dag.py', '--cfg-path', '/tmp/tmpnxgdzibs']
+[2026-09-18T10:28:32.139+0000] {standard_task_runner.py:91} INFO - Job 30: Subtask clean_silver
+[2026-09-18T10:28:32.141+0000] {logging_mixin.py:188} WARNING - /home/airflow/.local/lib/python3.12/site-packages/airflow/task/task_runner/standard_task_runner.py:62 DeprecationWarning: This process (pid=1454) is multi-threaded, use of fork() may lead to deadlocks in the child.
+[2026-09-18T10:28:32.142+0000] {standard_task_runner.py:64} INFO - Started process 1456 to run task
+[2026-09-18T10:28:32.209+0000] {task_command.py:426} INFO - Running <TaskInstance: meteorisk_pipeline.clean_silver manual__2026-09-18T10:27:17.929306+00:00 [running]> on host 642d0aadbf4e
+[2026-09-18T10:28:32.304+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='Abderrahmane' AIRFLOW_CTX_DAG_ID='meteorisk_pipeline' AIRFLOW_CTX_TASK_ID='clean_silver' AIRFLOW_CTX_EXECUTION_DATE='2026-09-18T10:27:17.929306+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2026-09-18T10:27:17.929306+00:00'
+[2026-09-18T10:28:32.305+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2026-09-18T10:28:32.319+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2026-09-18T10:28:32.321+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', 'cd /opt/airflow && python transformation/clean_silver.py']
+[2026-09-18T10:28:32.333+0000] {subprocess.py:86} INFO - Output:
+[2026-09-18T10:28:33.386+0000] {subprocess.py:93} INFO - 2026-09-18 10:28:33,386 [INFO] 227 fichiers JSON trouvés dans bronze
+[2026-09-18T10:28:35.000+0000] {subprocess.py:93} INFO - 2026-09-18 10:28:34,999 [INFO] Silver termine : 654 lignes, 61 villes
+[2026-09-18T10:28:35.083+0000] {subprocess.py:97} INFO - Command exited with return code 0
+[2026-09-18T10:28:35.085+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2026-09-18T10:28:35.116+0000] {taskinstance.py:1206} INFO - Marking task as SUCCESS. dag_id=meteorisk_pipeline, task_id=clean_silver, run_id=manual__2026-09-18T10:27:17.929306+00:00, execution_date=20260918T102717, start_date=20260918T102832, end_date=20260918T102835
+[2026-09-18T10:28:35.137+0000] {local_task_job_runner.py:243} INFO - Task exited with return code 0
+[2026-09-18T10:28:35.164+0000] {taskinstance.py:3503} INFO - 1 downstream tasks scheduled from follow-on schedule check
+[2026-09-18T10:28:35.168+0000] {local_task_job_runner.py:222} INFO - ::endgroup::
