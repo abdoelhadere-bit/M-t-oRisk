@@ -6081,3 +6081,10 @@
 [2026-09-18T20:17:11.619+0000] {logging_mixin.py:188} INFO - [2026-09-18T20:17:11.619+0000] {dag.py:3089} INFO - Sync 1 DAGs
 [2026-09-18T20:17:11.673+0000] {logging_mixin.py:188} INFO - [2026-09-18T20:17:11.673+0000] {dag.py:3947} INFO - Setting next_dagrun for meteorisk_pipeline to 2026-09-18 00:00:00+00:00, run_after=2026-09-19 00:00:00+00:00
 [2026-09-18T20:17:11.717+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/meteorisk_dag.py took 0.291 seconds
+[2026-09-18T20:17:41.842+0000] {processor.py:161} INFO - Started process (PID=4918) to work on /opt/airflow/dags/meteorisk_dag.py
+[2026-09-18T20:17:41.844+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/meteorisk_dag.py for tasks to queue
+[2026-09-18T20:17:41.847+0000] {logging_mixin.py:188} INFO - [2026-09-18T20:17:41.846+0000] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/meteorisk_dag.py
+[2026-09-18T20:17:41.900+0000] {processor.py:840} INFO - DAG(s) 'meteorisk_pipeline' retrieved from /opt/airflow/dags/meteorisk_dag.py
+[2026-09-18T20:17:41.981+0000] {logging_mixin.py:188} INFO - [2026-09-18T20:17:41.981+0000] {dag.py:3089} INFO - Sync 1 DAGs
+[2026-09-18T20:17:42.021+0000] {logging_mixin.py:188} INFO - [2026-09-18T20:17:42.020+0000] {dag.py:3947} INFO - Setting next_dagrun for meteorisk_pipeline to 2026-09-18 00:00:00+00:00, run_after=2026-09-19 00:00:00+00:00
+[2026-09-18T20:17:42.059+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/meteorisk_dag.py took 0.227 seconds
