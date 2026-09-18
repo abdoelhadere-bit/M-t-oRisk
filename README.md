@@ -10,19 +10,10 @@ précipitations, vents, températures extrêmes).
 Une entreprise de livraison opérant dans plusieurs villes marocaines veut
 anticiper les perturbations liées à la météo sur les prochains jours, afin
 d'adapter l'organisation de ses livraisons (villes concernées, périodes à
-risque).
-
-### Scope retenu : livraison urbaine
-
-**Décision :** le projet cible la **livraison urbaine** (deux-roues,
-véhicules légers) au sein de chaque ville, et non le transport inter-villes
-par poids lourd.
-
-**Pourquoi ça compte :** les seuils météo (vent, chaleur, pluie) ne sont pas
-les mêmes selon le type de véhicule. Un scooter est mis en danger par des
-rafales de vent bien plus faibles qu'un camion, et le livreur est directement
-exposé à la chaleur (pas de cabine climatisée). Ce choix de scope justifie
-les seuils utilisés dans les sections suivantes.
+risque). Le projet reste **générique** quant au type de véhicule (le brief
+ne précisant pas s'il s'agit de livraison inter-villes ou urbaine) : les
+seuils météo retenus s'appuient sur des repères de vigilance météo
+standards, applicables à tout usager de la route.
 
 ## Sources de données
 
@@ -33,21 +24,19 @@ les seuils utilisés dans les sections suivantes.
 
 ### Variables météo récupérées (API Open-Meteo, paramètre `daily`)
 
-| Variable | Description | Usage prévu |
+| Variable | Description | Usage |
 |---|---|---|
-| `temperature_2m_max` | Température max du jour (°C) | Détection de vagues de chaleur |
-| `temperature_2m_min` | Température min du jour (°C) | Détection de froid/gel |
-| `precipitation_sum` | Cumul de précipitations du jour (mm) | Risque pluie forte / routes glissantes |
+| `temperature_2m_max` / `temperature_2m_min` | Températures max/min du jour (°C) | Détection de chaleur/froid extrêmes |
+| `precipitation_sum` | Cumul de précipitations du jour (mm) | Risque de pluie forte |
 | `precipitation_probability_max` | Probabilité max de précipitation (%) | Fiabilité de la prévision de pluie |
-| `wind_speed_10m_max` | Vitesse de vent "de fond" max (km/h) | Récupérée mais non utilisée dans le score (voir note) |
-| `wind_gusts_10m_max` | Rafales de vent max, pics ponctuels (km/h) | Risque pour deux-roues / véhicules légers |
-| `weather_code` | Code météo standardisé WMO | Détection de conditions dangereuses non captées par les seuils numériques (brouillard, orage, grêle) |
+| `wind_speed_10m_max` | Vitesse de vent "de fond" max (km/h) | Récupérée mais non utilisée dans le score |
+| `wind_gusts_10m_max` | Rafales de vent max, pics ponctuels (km/h) | Utilisée pour le risque vent (voir note) |
+| `weather_code` | Code météo standardisé WMO | Détection de dangers non captés par les seuils numériques (brouillard, orage) |
 
-**Note — pourquoi les rafales (`wind_gusts_10m_max`) plutôt que la vitesse
-moyenne (`wind_speed_10m_max`) :** un deux-roues n'est pas déstabilisé par un
-vent constant modéré, mais par un pic soudain. Les rafales sont souvent 2 à
-3 fois plus fortes que la vitesse moyenne et représentent le vrai danger
-pour ce type de véhicule.
+**Pourquoi les rafales plutôt que la vitesse moyenne pour le vent :** un
+pic soudain (rafale) déstabilise davantage un véhicule qu'un vent constant
+modéré ; les rafales sont souvent 2 à 3 fois plus fortes que la vitesse
+moyenne et représentent le vrai facteur de danger.
 
 Prévisions récupérées sur **7 jours** (aujourd'hui + 6 jours), avec
 `timezone=auto` pour aligner les dates sur le fuseau horaire marocain local.
@@ -69,19 +58,14 @@ Open-Meteo API (météo)  ───┘
     PostgreSQL
         │
         ▼
-   Dashboard Streamlit  <──  Orchestré par Airflow (DAG quotidien)
+   Dashboard Streamlit  <──  Orchestré par Airflow (DAG quotidien, dans Docker Compose)
 ```
 
-### Pourquoi une architecture Bronze → Silver → Gold ?
-
-- **Bronze** : copie brute et intouchable des données sources (CSV filtré +
-  réponses JSON de l'API). Permet de rejouer les étapes suivantes sans
-  refaire d'appels API si un bug est corrigé en aval.
-- **Silver** : données nettoyées, typées et jointes (villes + météo), sans
-  encore de logique métier.
-- **Gold** : données enrichies avec les catégories métier et le
-  `risk_score`, prêtes à être chargées en base et consommées par le
-  dashboard.
+**Pourquoi Bronze → Silver → Gold :** chaque couche est intouchable une
+fois écrite (sauf régénération complète), ce qui permet de rejouer les
+étapes suivantes sans refaire d'appels API si un bug est corrigé en aval —
+utile en pratique, notamment lors des incidents de quota API rencontrés en
+développement (voir section Limites).
 
 ## Sélection des villes
 
@@ -90,43 +74,161 @@ marocaines recensées (plusieurs centaines, y compris de très petites
 communes), ce qui n'a pas de sens pour un cas d'usage logistique et
 consommerait rapidement le quota gratuit de l'API Open-Meteo.
 
-**Filtre appliqué :** villes avec une population **≥ 100 000 habitants**,
-considérées comme des centres logistiques significatifs pour une entreprise
-de livraison.
+**Filtre appliqué :** villes avec une population **≥ 80 000 habitants**.
 
-**Résultat :** 45 villes retenues sur le territoire marocain.
+**Résultat :** **61 villes** retenues sur le territoire marocain.
 
-## Structure du projet
+## Weather Risk Score
 
-```
-meteorisk/
-├── bronze/                      # données brutes (non versionnées, sauf échantillon)
-│   ├── cities_raw.csv
-│   └── weather_{id}_{date}.json
-├── silver/                      # données nettoyées (à venir)
-├── gold/                        # données enrichies (à venir)
-├── extraction/
-│   ├── extract_cities.py        # filtrage des villes marocaines (SimpleMaps)
-│   └── extract_weather.py       # appels API Open-Meteo (bronze)
-├── transformation/
-│   └── clean_silver.py          # nettoyage, dédup, jointure villes-météo
-├── load/
-│   └── feature_engineering_gold.py   # catégories métier + weather risk score (en cours)
-│                                  # chargement Postgres (à venir)
-├── dashboard/                     # dashboard Streamlit (à venir)
-├── dags/                          # DAG Airflow (à venir)
-├── sql/                           # schéma + requêtes d'analyse (à venir)
-├── docker-compose.yml             # (à venir)
-├── requirements.txt
-├── .env.example
-└── README.md
+### Principe général
+
+Le score est une **moyenne pondérée hybride**, entre 0 et 100, combinant
+un sous-score par variable météo. Chaque sous-score est calculé par
+**interpolation linéaire continue** entre un seuil bas (`low`, aucun
+risque) et un seuil haut (`high`, risque maximal) :
+
+```python
+def linear_score(value, low, high):
+    if value <= low:  return 0
+    if value >= high: return 100
+    return (value - low) / (high - low) * 100
 ```
 
-## Installation
+Une interpolation continue a été préférée à des paliers fixes : elle évite
+l'effet "escalier" (deux valeurs très différentes recevant le même score)
+et reflète plus fidèlement la gravité réelle de chaque variable.
+
+### Variables, seuils et justification
+
+| Variable | `low` | `high` | Poids | Justification du seuil |
+|---|---|---|---|---|
+| Température max | 33°C | 45°C | 15% | En dessous de 33°C : chaleur estivale normale au Maroc. 45°C proche des records absolus. |
+| Précipitations | 0mm | 35mm | 35% | 35mm/jour correspond au seuil d'entrée de la catégorie "pluie forte" dans les classifications météo standards ; un seuil plus bas est retenu par rapport aux références "grand public" (souvent 50mm) car le Maroc dispose d'infrastructures de drainage plus limitées, rendant un même cumul plus perturbateur. |
+| Vent (rafales) | 30 km/h | 80 km/h | 35% | Seuil bas cohérent avec le début des effets sensibles sur la stabilité d'un véhicule (échelle de Beaufort, force 6) ; seuil haut proche d'un vent violent. |
+| Code météo (WMO) | — (table de correspondance) | — | 15% | Capte les dangers non visibles dans les seuils numériques (brouillard, orage, grêle), via une table de sévérité par code (0 = ciel dégagé → 100 = orage avec grêle forte). |
+
+**Pourquoi le poids du `weather_code` reste le plus faible malgré son
+rôle important :** cette variable est souvent redondante avec les autres
+(un orage s'accompagne généralement déjà de pluie et de vent forts) ; son
+rôle est complémentaire (capter des cas particuliers comme le brouillard),
+pas de porter le score à lui seul.
+
+### Formule de combinaison
+
+```python
+weighted_avg = wind*0.35 + precip*0.35 + temp*0.15 + code*0.15
+dominant_factor = max(temp_score, precip_score, wind_score, code_score)
+risk_score = max(weighted_avg, 0.6 * dominant_factor + 0.4 * weighted_avg)
+```
+
+**Pourquoi cette formule hybride, plutôt qu'une simple moyenne pondérée :**
+une moyenne pondérée pure dilue un danger extrême isolé (ex : une rafale de
+90 km/h avec aucune pluie ni chaleur) dans un score final trop bas pour
+refléter le vrai danger. La formule garantit qu'un facteur dominant à 100
+pousse le score final à au moins 60 (soit déjà "Élevé"), même si les
+autres variables sont calmes.
+
+### Niveaux de risque
+
+| Score | Niveau |
+|---|---|
+| 0 – 25 | Faible |
+| 26 – 50 | Modéré |
+| 51 – 75 | Élevé |
+| 76 – 100 | Critique |
+
+## Modèle de données
+
+Voir le diagramme UML complet : [`UML_DIAGRAM.md`](./UML_DIAGRAM.md).
+
+Deux tables normalisées :
+- **`cities`** : `id` (clé SimpleMaps, stable), `city_ascii`, `lat`, `lng`, `population`.
+- **`forecasts`** : `id` (auto-incrémenté), `city_id` (FK → `cities.id`), `date`,
+  les variables météo brutes, les catégories métier, `risk_score`, `risk_level`,
+  les features temporelles (`day_of_week`, `is_weekend`, `days_ahead`), et
+  `run_date` (horodatage de dernière mise à jour).
+
+### Stratégie anti-doublons
+
+Contrainte `UNIQUE(city_id, date)` sur `forecasts`, combinée à un chargement
+en **upsert** (`INSERT ... ON CONFLICT (city_id, date) DO UPDATE`, via
+SQLAlchemy). Rejouer le pipeline plusieurs fois pour la même date met à
+jour la prévision existante plutôt que de créer un doublon — testé et
+confirmé (le nombre de lignes reste stable après plusieurs exécutions
+répétées du DAG).
+
+## Analyse SQL
+
+Fichier : [`sql/analysis_queries.sql`](./sql/analysis_queries.sql). Six
+requêtes répondant aux questions métier :
+
+1. Villes avec les températures les plus élevées
+2. Villes/jours avec les plus fortes précipitations (événements précis)
+3. Villes avec le risque moyen le plus élevé
+4. Périodes (dates) avec le risque maximal, toutes villes confondues
+5. Pour chaque ville, la période la plus risquée (`DISTINCT ON`, syntaxe PostgreSQL)
+6. Bonus : nombre de villes couvertes, températures et précipitations max globales
+
+## Dashboard Streamlit
+
+Fichiers : [`dashboard/db.py`](./dashboard/db.py) (connexion + requête,
+mises en cache via `@st.cache_resource` / `@st.cache_data`) et
+[`dashboard/app.py`](./dashboard/app.py) (filtres et visualisations).
+
+### Filtres
+- Ville(s) — sélection multiple
+- Période — plage de dates (couvre aussi bien un jour unique qu'un intervalle)
+- Niveau de risque — sélection multiple
+
+### Visualisations, une par question métier
+
+| Question métier | Visualisation | Détail |
+|---|---|---|
+| Villes au risque **moyen** le plus élevé | Carte (couleur/taille = risk_score moyen par ville) | Répond géographiquement, sans graphique séparé |
+| Températures les plus élevées | Bar chart horizontal (top 10) | Comparaison directe |
+| Précipitations les plus fortes | Scatter plot (date × précipitation, coloré par ville) | Événements précis, pas un agrégat par ville |
+| Périodes à risque maximal **+** pire période par ville | Heatmap (villes × dates, couleur = risk_score) | Une colonne répond à la 1ère question, une ligne à la 2nde — fusion de deux questions dans un seul graphique |
+
+*Captures d'écran à insérer ici : `[dashboard-carte.png]`, `[dashboard-graphiques.png]`, `[dashboard-heatmap.png]`.*
+
+## Orchestration Airflow
+
+Fichier : [`dags/meteorisk_dag.py`](./dags/meteorisk_dag.py).
+
+- **5 tâches séquentielles** (`BashOperator`) : `extract_cities >> extract_weather >> clean_silver >> feature_engineering_gold >> load_postgres`.
+- **Planification** : `@daily`, `catchup=False` (pas de rattrapage des exécutions passées).
+- **Gestion des erreurs** : `retries=2`, `retry_delay=3 minutes` par tâche.
+- **Mode Airflow** : `standalone` (webserver + scheduler + triggerer dans un seul conteneur, `LocalExecutor`) — choix volontaire pour rester proportionné à la charge du pipeline (5 tâches séquentielles, 1 fois/jour), plutôt qu'une architecture distribuée (Celery + Redis) inutilement complexe ici.
+- Chaque script est appelé avec un `cd` explicite vers la racine du projet avant exécution, pour que les chemins relatifs (`bronze/`, `silver/`, `gold/`) se résolvent identiquement en local et dans le conteneur.
+
+## Conteneurisation Docker Compose
+
+Fichier : [`compose.yaml`](./compose.yaml). Trois services :
+
+| Service | Rôle | Dockerfile |
+|---|---|---|
+| `postgres` | Base de données (schéma métier `meteorisk` + métadonnées Airflow `airflow`, deux bases distinctes dans le même conteneur) | image officielle `postgres:16` |
+| `airflow` | Orchestration du pipeline | [`docker/airflow.Dockerfile`](./docker/airflow.Dockerfile) |
+| `streamlit` | Dashboard | [`Dockerfile`](./Dockerfile) (racine) |
+
+**Pourquoi deux `Dockerfile` séparés plutôt qu'un seul :** Airflow 2.9.3
+exige `sqlalchemy<2.0`, alors que le dashboard utilise une version plus
+récente de SQLAlchemy sans contrainte particulière. Réutiliser un seul
+fichier de dépendances pour les deux conteneurs provoquait un conflit de
+versions cassant Airflow au démarrage — d'où
+[`requirements-airflow.txt`](./requirements-airflow.txt), minimal et
+dédié, distinct de [`requirements.txt`](./requirements.txt).
+
+Les tables `cities`/`forecasts` (`load/schema.sql`) et la base de
+métadonnées Airflow (`docker/init-airflow-db.sql`) sont créées
+automatiquement au premier démarrage du conteneur Postgres, via le
+mécanisme `docker-entrypoint-initdb.d/`.
+
+## Installation et exécution
 
 ### Prérequis
-- Python 3.11+
-- Un fichier `worldcities.csv` téléchargé depuis SimpleMaps, placé dans `data/`
+- Docker et Docker Compose installés
+- Un fichier `worldcities.csv` (SimpleMaps) placé dans `data/`
 
 ### Étapes
 
@@ -134,111 +236,89 @@ meteorisk/
 git clone <url-du-repo>
 cd meteorisk
 
-python3 -m venv venv
-source venv/bin/activate        # Windows : venv\Scripts\activate
+cp .env.example .env
+# éditer .env : POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB
 
-pip install -r requirements.txt
-
-cp .env.example .env            # puis renseigner les identifiants Postgres
+docker compose up --build
 ```
 
-## Utilisation — Étape 1 : Extraction (Bronze)
+### Accès aux services une fois démarrés
 
-### 1. Filtrer les villes marocaines
+| Service | URL |
+|---|---|
+| Interface Airflow | http://localhost:8080 |
+| Dashboard Streamlit | http://localhost:8501 |
+| PostgreSQL | `localhost:5432` (ou `docker exec -it meteorisk_postgres psql -U postgres -d meteorisk`) |
 
+**Créer un utilisateur Airflow** (si aucun compte admin n'existe déjà) :
 ```bash
-python extraction/extract_cities.py
-```
-→ Génère `bronze/cities_raw.csv` (45 villes, population ≥ 100 000 hab.)
-
-### 2. Récupérer les prévisions météo
-
-```bash
-python extraction/extract_weather.py
-```
-→ Génère un fichier `bronze/weather_{id}_{date}.json` par ville, contenant
-la réponse brute de l'API Open-Meteo.
-
-**Gestion des erreurs implémentée :**
-- Timeout et erreurs réseau → retry automatique (3 tentatives, backoff progressif)
-- Quota API journalier dépassé (HTTP 429) → arrêt propre du script avec message explicite
-- Erreurs HTTP non récupérables (4xx/5xx hors 429) → ville ignorée, traitement des autres villes poursuivi
-- Délai d'1 seconde entre chaque appel pour ne pas saturer l'API
-- Réutilisation d'une `requests.Session()` pour l'ensemble des appels
-
-## Utilisation — Étape 2 : Nettoyage (Silver)
-
-```bash
-python transformation/clean_silver.py
+docker exec -it meteorisk_airflow airflow users create \
+    --username admin --firstname <prenom> --lastname <nom> \
+    --role Admin --email admin@meteorisk.local --password <mot_de_passe>
 ```
 
-Cette étape :
-1. Charge tous les fichiers JSON de `bronze/weather/` et les transforme
-   d'un format "large" (une liste par variable) vers un format "long"
-   (une ligne par ville × par jour).
-2. Standardise les types (dates en `datetime`, valeurs en numérique).
-3. Supprime les doublons sur `(city_id, date)` en gardant la donnée la plus
-   récente — utile si le pipeline est relancé plusieurs fois le même jour.
-4. Contrôle la cohérence des données (température min > max, précipitations
-   ou vent négatifs) et loggue les anomalies détectées.
-5. Joint les données météo avec les informations des villes
-   (`city_ascii`, `lat`, `lng`, `population`).
+**Déclencher le pipeline manuellement** (sans attendre l'exécution
+quotidienne automatique) : depuis l'interface Airflow, DAG
+`meteorisk_pipeline` → bouton ▶️ (Trigger DAG).
 
-→ Génère `silver/weather_silver.csv`.
+**Consulter les logs Airflow** directement depuis l'explorateur de
+fichiers, sans passer par l'interface : dossier `airflow_logs/` à la
+racine du projet (monté en bind mount).
 
-**Contrôle qualité effectué :** aucune valeur manquante (NaN) ni incohérence
-physique détectée sur le jeu de données testé (45 villes × 7 jours).
+## Structure du projet
 
-## Utilisation — Étape 3 : Feature Engineering (Gold, en cours)
-
-```bash
-python load/feature_engineering_gold.py
+```
+meteorisk/
+├── bronze/                       # données brutes (échantillon versionné)
+├── silver/                       # données nettoyées (échantillon versionné)
+├── gold/                         # données enrichies (échantillon versionné)
+├── extraction/
+│   ├── extract_cities.py
+│   └── extract_weather.py
+├── transformation/
+│   ├── clean_silver.py
+│   └── feature_engineering_gold.py
+├── load/
+│   ├── load_postgres.py
+│   └── schema.sql
+├── sql/
+│   └── analysis_queries.sql
+├── dashboard/
+│   ├── db.py
+│   └── app.py
+├── dags/
+│   └── meteorisk_dag.py
+├── docker/
+│   ├── airflow.Dockerfile
+│   └── init-airflow-db.sql
+├── airflow_logs/                 # logs Airflow (bind mount, généré au démarrage)
+├── compose.yaml
+├── Dockerfile                    # image Streamlit
+├── requirements.txt              # dépendances locales + dashboard
+├── requirements-airflow.txt      # dépendances minimales pour le conteneur Airflow
+├── .env.example
+├── UML_DIAGRAM.md
+└── README.md
 ```
 
-### Catégories métier créées
+## Limites connues et pistes d'amélioration
 
-| Colonne | Seuils | Justification |
-|---|---|---|
-| `temperature_category` | Fraîche (<15°C) / Modérée (15-29°C) / Chaude (30-38°C) / Extrême chaleur (>38°C) | Seuil de 38°C proche des seuils d'alerte canicule adaptés aux régions chaudes |
-| `precipitation_category` | Aucune (0mm) / Faible (0-5mm) / Modérée (5-20mm) / Forte (≥20mm) | 20mm/jour cohérent avec les seuils de vigilance "fortes pluies" |
-| `wind_category` | Normal (<40 km/h) / Fort (40-70 km/h) / Danger (≥70 km/h) | Basé sur les **rafales**, seuils calibrés pour un deux-roues (voir scope) |
-| `weather_category` | Regroupement des codes WMO (Ciel dégagé / Nuageux / Brouillard / Pluie / Neige / Orage) | Source : [doc Open-Meteo](https://open-meteo.com/en/docs), table WMO — capte les dangers non visibles dans les seuils numériques (ex : brouillard) |
+- **Absence d'événements extrêmes sur la période testée** : la fenêtre de
+  prévision observée pendant le développement (mi-septembre 2026) était
+  météorologiquement calme — peu de précipitations, pas de rafales
+  extrêmes. Le score reste néanmoins sensible à toute condition dépassant
+  les seuils `high` définis, si elle survenait lors d'une exécution future.
+- **Léger écart entre le seuil de score du vent (`high=80`) et le seuil
+  de la catégorie textuelle "Danger" (`>=90`)** : les deux mécanismes
+  (score numérique continu et catégorie discrète) ont été ajustés à des
+  moments différents du développement ; une harmonisation stricte des deux
+  seuils serait une amélioration mineure possible.
+- **Historique des prévisions** : chaque run Bronze archive ses fichiers
+  JSON avec un horodatage (`weather_{city_id}_{date}.json`), permettant en
+  théorie de reconstituer un historique des prévisions — non exploité plus
+  avant dans le dashboard actuel.
+- **Pipeline incrémental** : actuellement, chaque run Bronze/Silver/Gold
+  retraite l'ensemble des données disponibles plutôt que seulement les
+  nouvelles lignes — suffisant au volume actuel (61 villes × 7 jours), mais
+  à revoir si le nombre de villes augmentait significativement.
 
-### Features temporelles créées
-
-| Colonne | Description | Pourquoi |
-|---|---|---|
-| `day_of_week` | Nom du jour (Monday, Tuesday...) | Filtrage/lisibilité dans le dashboard |
-| `is_weekend` | Booléen samedi/dimanche | L'activité de livraison peut différer le week-end |
-| `days_ahead` | Nombre de jours entre la date de la prévision et aujourd'hui (0 = aujourd'hui, 1 = demain...) | Permet de répondre à "quelle **période** est la plus à risque" de façon relative, indépendamment de la date absolue — essentiel car le pipeline tourne quotidiennement et "demain" change de date chaque jour |
-
-**Contrôle qualité :** les lignes avec `days_ahead < 0` (prévisions déjà
-passées, dues à un décalage entre la date de récupération Bronze et la date
-d'exécution du script) sont filtrées avant chargement en base.
-
-## Roadmap
-
-- [x] Étape 1 — Extraction / Bronze
-- [x] Étape 2 — Nettoyage / Silver
-- [~] Étape 3 — Feature Engineering / Gold (catégories faites, Weather Risk Score en cours)
-- [ ] Étape 4 — Analyse SQL
-- [ ] Étape 5 — Dashboard Streamlit
-- [ ] Étape 6 — Orchestration Airflow + Docker Compose
-
-## Weather Risk Score
-
-*Section à compléter à l'Étape 3 : méthode de calcul, variables utilisées,
-seuils retenus et justification.*
-
-## Modèle de données
-
-*Section à compléter à l'Étape 3 : schéma des tables PostgreSQL (villes,
-prévisions, risk_score) et stratégie anti-doublons.*
-
-## Captures d'écran du dashboard
-
-*Section à compléter à l'Étape 5.*
-
-## Auteur
-
-Hamid OUFAKIR — Certification RNCP Développeur.se en intelligence artificielle
